@@ -15,6 +15,8 @@ export async function connectDB() {
     cached.promise = mongoose.connect(MONGODB_URI, {
       bufferCommands: false,
     }).then((mongoose) => mongoose);
+    // store cached on the global object so it persists across module reloads
+    (global as any).mongoose = cached;
   }
   cached.conn = await cached.promise;
   return cached.conn;

@@ -1,0 +1,60 @@
+import { NextResponse } from "next/server";
+import { connectDB } from "@/lib/db";
+import Task from "@/models/Task";
+import { verifyToken } from "@/lib/auth";
+import mongoose from "mongoose";
+
+export async function GET(req: Request) {
+  try {
+    await connectDB();
+
+    const user = verifyToken(req);
+    if (!user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+    const userId = new mongoose.Types.ObjectId(String(user.id));
+    // Query by ObjectId to ensure ownership matching works reliably
+    const tasks = await Task.find({ userId });
+
+    // Debug logging only in development
+    if (process.env.NODE_ENV === "development") {
+      console.debug("GET /api/tasks", {
+        userId: userId.toString(),
+        userIdString: String(user.id),
+        tasksFound: tasks.length,
+      });
+    }
+
+    return NextResponse.json(tasks);
+  } catch (err: any) {
+    console.error("GET /api/tasks error", err);
+    return NextResponse.json(
+      { message: err?.message ?? "Server error", error: err?.message ?? String(err) },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(req: Request) {
+  try {
+    await connectDB();
+
+    const user = verifyToken(req);
+    if (!user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+    const body = await req.json();
+    const userId = new mongoose.Types.ObjectId(String(user.id));
+
+    const task = await Task.create({
+      ...body,
+      userId, // ⬅ KORISNIK KOJI JE KREIRAO TASK
+    });
+
+    return NextResponse.json(task, { status: 201 });
+  } catch (err: any) {
+    console.error("POST /api/tasks error", err);
+    return NextResponse.json(
+      { message: err?.message ?? "Server error", error: err?.message ?? String(err) },
+      { status: 500 }
+    );
+  }
+}

@@ -10,6 +10,11 @@ export async function POST(req: Request) {
     try {
         const { email, password } = await req.json();
 
+        // Basic validation
+        if (!email || !password) {
+            return NextResponse.json({ message: "email and password are required" }, { status: 400 });
+        }
+
         const user = await User.findOne({ email });
         if (!user) {
             return NextResponse.json({ message: "Invalid email" }, { status: 401 });
@@ -28,6 +33,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ message: "Login successful", token }, { status: 200 });
     } catch (error) {
+        console.error("Login error:", error);
         return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
     }
 }
