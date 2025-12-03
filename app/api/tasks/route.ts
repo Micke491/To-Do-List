@@ -8,6 +8,13 @@ export async function GET(req: Request) {
   try {
     await connectDB();
 
+    const { search, status, priority } = Object.fromEntries(new URL(req.url).searchParams);
+
+    if (search) {
+      const regex = new RegExp(search as string, "i");
+      const tasks = await Task.find({ title: regex });
+      return NextResponse.json(tasks);
+    }
     const user = verifyToken(req);
     if (!user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
