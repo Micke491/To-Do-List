@@ -7,6 +7,7 @@ export interface ITask extends Document {
   priority: "red" | "yellow" | "green";
   completed: boolean;
   userId: mongoose.Types.ObjectId; // ➕ ZAŠTITA
+  createdAt?: Date;
 }
 
 const TaskSchema = new Schema<ITask>({
@@ -16,6 +17,8 @@ const TaskSchema = new Schema<ITask>({
   priority: { type: String, enum: ["red", "yellow", "green"], default: "green" },
   completed: { type: Boolean, default: false },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, 
+}, {
+  timestamps: true, // Automatically adds createdAt and updatedAt
 });
 
 export default mongoose.models.Task || mongoose.model<ITask>("Task", TaskSchema);

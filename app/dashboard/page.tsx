@@ -10,6 +10,7 @@ interface Task {
   category: string;
   priority: "red" | "yellow" | "green";
   completed: boolean;
+  createdAt?: string;
 }
 
 export default function DashboardPage() {
@@ -20,6 +21,10 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [adding, setAdding] = useState(false);
+  const [searchTitle, setSearchTitle] = useState("");
+  const [filterPriority, setFilterPriority] = useState<"all" | "red" | "yellow" | "green">("all");
+  const [filterCompleted, setFilterCompleted] = useState<"all" | "active" | "completed">("all");
+  const [sortBy, setSortBy] = useState<"created" | "priority" | "title">("created");
   const router = useRouter();
 
   // 🔥 Fetch tasks – protected with JWT
@@ -237,11 +242,57 @@ export default function DashboardPage() {
     router.push("/");
   };
 
+  // Format date for display
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "Unknown";
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
+    } catch {
+      return "Invalid date";
+    }
+  };
+
+  // Filter and sort tasks
+  const filteredAndSorted = tasks
+    .filter((task) => {
+      // Filter by search title
+      if (searchTitle && !task.title.toLowerCase().includes(searchTitle.toLowerCase())) return false;
+      // Filter by priority
+      if (filterPriority !== "all" && task.priority !== filterPriority) return false;
+      // Filter by completion status
+      if (filterCompleted === "active" && task.completed) return false;
+      if (filterCompleted === "completed" && !task.completed) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === "created") {
+        // Sort by creation time, newest first
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA;
+      } else if (sortBy === "priority") {
+        // Sort by priority: red > yellow > green
+        const priorityOrder = { red: 0, yellow: 1, green: 2 };
+        return priorityOrder[a.priority] - priorityOrder[b.priority];
+      } else if (sortBy === "title") {
+        // Sort alphabetically by title
+        return a.title.localeCompare(b.title);
+      }
+      return 0;
+    });
+
   return (
     <div className="min-h-screen bg-gray-900 text-white p-8">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-4xl font-bold">Dashboard – To-Do List</h1>
         <div className="flex gap-2">
+          <button
+            onClick={() => router.push("/")}
+            className="bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded"
+          >
+            Home
+          </button>
           <button
             onClick={logout}
             className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded"
@@ -286,14 +337,55 @@ export default function DashboardPage() {
         {error && <p className="text-sm text-red-400 mt-2">{error}</p>}
       </div>
 
+      {/* Search and Filter Section */}
+      <div className="bg-gray-800 p-6 rounded-xl shadow-md mb-8 max-w-2xl mx-auto flex flex-col gap-4">
+        <input
+          type="text"
+          placeholder="🔍 Search tasks by title..."
+          value={searchTitle}
+          onChange={(e) => setSearchTitle(e.target.value)}
+          className="w-full px-4 py-2 rounded-lg bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <div className="flex gap-4">
+          <select
+            value={filterPriority}
+            onChange={(e) => setFilterPriority(e.target.value as any)}
+            className="flex-1 px-4 py-2 rounded-lg bg-gray-700"
+          >
+            <option value="all">All Priorities</option>
+            <option value="red">🔴 Red (High)</option>
+            <option value="yellow">🟡 Yellow (Medium)</option>
+            <option value="green">🟢 Green (Low)</option>
+          </select>
+          <select
+            value={filterCompleted}
+            onChange={(e) => setFilterCompleted(e.target.value as any)}
+            className="flex-1 px-4 py-2 rounded-lg bg-gray-700"
+          >
+            <option value="all">All Tasks</option>
+            <option value="active">📋 Active Only</option>
+            <option value="completed">✅ Completed Only</option>
+          </select>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+            className="flex-1 px-4 py-2 rounded-lg bg-gray-700"
+          >
+            <option value="created">Sort: Newest First</option>
+            <option value="priority">Sort: By Priority</option>
+            <option value="title">Sort: By Title (A-Z)</option>
+          </select>
+        </div>
+      </div>
+
       {/* Task List */}
       <ul className="max-w-2xl mx-auto">
         {loading ? (
           <li className="text-center text-gray-300">Loading tasks...</li>
-        ) : !tasks.length ? (
-          <li className="text-center p-8 text-gray-300">No tasks yet. Add your first task above.</li>
+        ) : !filteredAndSorted.length ? (
+          <li className="text-center p-8 text-gray-300">{tasks.length === 0 ? "No tasks yet. Add your first task above." : "No tasks match your search or filters."}</li>
         ) : (
-          tasks.map((task) =>
+          filteredAndSorted.map((task) =>
             task._id ? (
               <li
                 key={task._id}
@@ -356,6 +448,7 @@ export default function DashboardPage() {
                   </div>
                   <p className="text-gray-300">{task.description}</p>
                   <p className="text-gray-400 text-sm">{task.category}</p>
+                  <p className="text-gray-500 text-xs">📅 Created: {formatDate(task.createdAt)}</p>
                   <div className="flex gap-2 mt-2">
                     <button
                       onClick={() => toggleCompletion(task._id, task.completed)}
