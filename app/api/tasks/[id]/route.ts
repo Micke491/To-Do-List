@@ -14,6 +14,13 @@ async function resolveParams(context: any) {
   return p;
 }
 
+function computeIsOverdue(dueDate: Date | undefined, completed: boolean): boolean {
+  if (completed) return false;
+  if (!dueDate) return false;
+  const now = new Date();
+  return dueDate < now;
+}
+
 // GET single task
 export async function GET(req: Request, context: any) {
   const params = await resolveParams(context);
@@ -32,10 +39,16 @@ export async function GET(req: Request, context: any) {
     if (!task) return NextResponse.json({ message: "Not found" }, { status: 404 });
 
     // Ensure the task belongs to the user
-    if (task.userId.toString() !== String(user.id))
+    if (task.userId.toString() !== String(user.id)) 
       return NextResponse.json({ message: "Not found" }, { status: 404 });
 
-    return NextResponse.json(task);
+    const isOverdue = computeIsOverdue(task.dueDate, task.completed);
+
+    return NextResponse.json({
+      ...task.toObject(),
+      isOverdue,
+    });
+
   } catch (err: any) {
     console.error("GET /api/tasks/[id] error", err);
     return NextResponse.json(
@@ -69,7 +82,12 @@ export async function PUT(req: Request, context: any) {
 
     if (!updated) return NextResponse.json({ message: "Not found" }, { status: 404 });
 
-    return NextResponse.json(updated);
+    const isOverdue = computeIsOverdue(updated.dueDate, updated.completed);
+
+    return NextResponse.json({
+      ...updated.toObject(),
+      isOverdue,
+    });
   } catch (err: any) {
     console.error("PUT /api/tasks/[id] error", err);
     return NextResponse.json(

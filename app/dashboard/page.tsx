@@ -11,14 +11,16 @@ interface Task {
   category: string;
   priority: "red" | "yellow" | "green";
   completed: boolean;
+  dueDate?: string;
   createdAt?: string;
+  isOverdue?: boolean;
 }
 
 export default function DashboardPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [newTask, setNewTask] = useState({ title: "", description: "", category: "", priority: "green" });
+  const [newTask, setNewTask] = useState({ title: "", description: "", category: "", dueDate: "", priority: "green" });
   const [editingTask, setEditingTask] = useState<string | null>(null);
-  const [editData, setEditData] = useState({ title: "", description: "", category: "", priority: "green" });
+  const [editData, setEditData] = useState({ title: "", description: "", category: "", dueDate: "", priority: "green" });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [adding, setAdding] = useState(false);
@@ -102,7 +104,7 @@ export default function DashboardPage() {
       const updatedTasks = [...tasks, createdTask];
       setTasks(updatedTasks);
       updateStats(updatedTasks);
-      setNewTask({ title: "", description: "", category: "", priority: "green" });
+      setNewTask({ title: "", description: "", category: "", dueDate: "", priority: "green" });
       setError("");
     } catch (err) {
       console.error("Error adding task:", err);
@@ -204,6 +206,7 @@ export default function DashboardPage() {
       title: task.title,
       description: task.description,
       category: task.category,
+      dueDate: task.dueDate || "",
       priority: task.priority,
     });
   };
@@ -383,6 +386,12 @@ export default function DashboardPage() {
               <option value="red">🔴 High Priority</option>
             </select>
           </div>
+          <input
+            type="date"
+            value={newTask.dueDate}
+            onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+            className="w-full px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          />
           <button
             onClick={addTask}
             disabled={adding}
@@ -511,6 +520,12 @@ export default function DashboardPage() {
                           <option value="yellow">🟡 Medium Priority</option>
                           <option value="red">🔴 High Priority</option>
                         </select>
+                        <input
+                          type="date"
+                          value={editData.dueDate}
+                          onChange={(e) => setEditData({ ...editData, dueDate: e.target.value })}
+                          className="px-3 py-2 rounded bg-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
                         <div className="flex gap-2 mt-2">
                           <button
                             onClick={() => saveEdit(task._id)}
@@ -551,7 +566,17 @@ export default function DashboardPage() {
                       </div>
                       {task.description && <p className="text-gray-300 mb-3 text-sm">{task.description}</p>}
                       <p className="text-gray-500 text-xs mb-4">📅 Created: {formatDate(task.createdAt)}</p>
-                      <div className="flex gap-2 flex-wrap">
+                      {task.dueDate && (
+                        <p
+                          className={`text-xs mb-6 ${
+                            task.isOverdue ? "text-red-400 font-bold" : "text-gray-500"
+
+                          }`}
+                        >
+                          ⏰ Due: {formatDate(task.dueDate)} {task.isOverdue && " (Overdue)"}
+                        </p>
+                      )}
+                      <div className="flex gap-2 flex-wrap mt-2">
                         <button
                           onClick={() =>
                             toggleCompletion(task._id, task.completed)
