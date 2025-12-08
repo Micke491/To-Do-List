@@ -72,6 +72,10 @@ export async function PUT(req: Request, context: any) {
 
     const data = await req.json();
 
+    if (data.dueDate) {
+      data.dueDate = new Date(data.dueDate);
+    }
+    
     // Use a single ownership-aware query. Compare userId as ObjectId.
     const userId = new mongoose.Types.ObjectId(String(user.id));
     const updated = await Task.findOneAndUpdate(

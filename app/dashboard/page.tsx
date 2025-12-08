@@ -397,7 +397,7 @@ export default function DashboardPage() {
             </select>
           </div>
           <input
-            type="date"
+            type="datetime-local"
             value={newTask.dueDate}
             onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
             className="w-full px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
@@ -531,8 +531,8 @@ export default function DashboardPage() {
                           <option value="red">🔴 High Priority</option>
                         </select>
                         <input
-                          type="date"
-                          value={editData.dueDate}
+                          type="datetime-local"
+                          value={editData.dueDate ? new Date(editData.dueDate).toISOString().slice(0,16) : ""}
                           onChange={(e) => setEditData({ ...editData, dueDate: e.target.value })}
                           className="px-3 py-2 rounded bg-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
