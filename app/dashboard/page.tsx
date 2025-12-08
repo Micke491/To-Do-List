@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/NavBar";
+import toast from "react-hot-toast";
 
 interface Task {
   _id: string;
@@ -112,6 +113,7 @@ export default function DashboardPage() {
     } finally {
       setAdding(false);
     }
+    toast.success("📝 Task created successfully!")
   };
 
   // 🔥 Toggle completion
@@ -153,6 +155,12 @@ export default function DashboardPage() {
       setTasks(updatedTasks);
       updateStats(updatedTasks);
       setError("");
+
+      if (!completed) {
+      toast.success("Task complete ✅");
+    } else {
+      toast.success("Task undo ↩️")
+    }
     } catch (err) {
       console.error("Failed to toggle completion", err);
       setError(String(err));
@@ -198,6 +206,7 @@ export default function DashboardPage() {
       console.error("Failed to delete task", err);
       setError(String(err));
     }
+    toast.success("🗑️ Task deleted successfully!")
   };
 
   const startEdit = (task: Task) => {
@@ -255,6 +264,7 @@ export default function DashboardPage() {
       console.error("Failed to edit task", err);
       setError(String(err));
     }
+    toast.success("✏️ Task edited successfully!")
   };
 
   const logout = () => {
