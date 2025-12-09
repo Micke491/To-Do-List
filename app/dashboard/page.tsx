@@ -50,20 +50,6 @@ export default function DashboardPage() {
       const oldIndex = items.findIndex((t) => t._id === active.id);
       const newIndex = items.findIndex((t) => t._id === over.id);
       const newOrder = arrayMove(items, oldIndex, newIndex);
-
-      // 🔥 Send new order to server
-      const token = localStorage.getItem("token");
-      if (token) {
-        fetch("/api/tasks/reorder", {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify({ taskIds: newOrder.map(t => t._id) }),
-        }).catch(err => console.error("Failed to save task order:", err));
-      }
-
       return newOrder;
     });
   }
