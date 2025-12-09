@@ -1,24 +1,13 @@
 "use client";
-
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import UserMenu from "./UserMenu";
 
 export default function Navbar() {
-  const [darkMode, setDarkMode] = useState(true);
-  const router = useRouter();
+  const [darkMode, setDarkMode] = useState<boolean>(true);
 
-  const toggleDarkMode = () => {
+  const toggleDarkMode = (): void => {
     setDarkMode(!darkMode);
     document.documentElement.classList.toggle("dark", !darkMode);
-  };
-
-  const handleLogout = async () => {
-    try {
-      localStorage.removeItem("token");
-      router.push("/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
   };
 
   return (
@@ -31,25 +20,8 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-3 items-center">
-          {/* Theme Toggle */}
-          <button
-            onClick={toggleDarkMode}
-            className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition text-sm font-medium text-white flex items-center gap-2"
-            title="Toggle theme"
-          >
-            {darkMode ? "🌙" : "☀️"}
-          </button>
-
-          {/* Logout Button */}
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 transition text-sm font-medium text-white flex items-center gap-2"
-          >
-            🚪 Logout
-          </button>
-        </div>
+        {/* User Menu */}
+        <UserMenu darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
       </div>
     </nav>
   );
