@@ -20,7 +20,7 @@ export async function GET(req: Request) {
 
     const userId = new mongoose.Types.ObjectId(String(user.id));
     // Query by ObjectId to ensure ownership matching works reliably
-    const tasks = await Task.find({ userId });
+    const tasks = await Task.find({ userId }).sort({ position: 1 });
 
     // Debug logging only in development
     if (process.env.NODE_ENV === "development") {
@@ -51,9 +51,13 @@ export async function POST(req: Request) {
     const body = await req.json();
     const userId = new mongoose.Types.ObjectId(String(user.id));
 
+    const lastTask = await Task.findOne({ userId }).sort({ position: -1 });
+    const newPosition  = lastTask ? lastTask.position + 1 : 0;
+
     const task = await Task.create({
       ...body,
       userId, // ⬅ KORISNIK KOJI JE KREIRAO TASK
+      position: newPosition,
     });
 
     return NextResponse.json(task, { status: 201 });

@@ -32,7 +32,7 @@ export default function DashboardPage() {
   const [searchTitle, setSearchTitle] = useState("");
   const [filterPriority, setFilterPriority] = useState<"all" | "red" | "yellow" | "green">("all");
   const [filterCompleted, setFilterCompleted] = useState<"all" | "active" | "completed">("all");
-  const [sortBy, setSortBy] = useState<"created" | "priority" | "title">("created");
+  const [sortBy, setSortBy] = useState<"created" | "priority" | "title" | "custom">("custom");
   const [stats, setStats] = useState({ total: 0, completed: 0, pending: 0 });
   const router = useRouter();
 
@@ -49,10 +49,30 @@ export default function DashboardPage() {
     setTasks((items) => {
       const oldIndex = items.findIndex((t) => t._id === active.id);
       const newIndex = items.findIndex((t) => t._id === over.id);
-      const newOrder = arrayMove(items, oldIndex, newIndex);
+
+      const newOrder = arrayMove(items, oldIndex, newIndex)
+        .map((task, index) => ({ ...task, position: index })); // update position
+
+      saveOrderToDB(newOrder);
       return newOrder;
     });
   }
+};
+
+const saveOrderToDB = async (newOrder: Task[]) => {
+  const token = localStorage.getItem("token");
+  if (!token) return;
+
+  await fetch("/api/tasks/reorder", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+    body: JSON.stringify({
+      orderedIds: newOrder.map((t) => t._id),
+    }),
+  });
 };
 
   // Update statistics
@@ -332,6 +352,8 @@ export default function DashboardPage() {
       } else if (sortBy === "title") {
         // Sort alphabetically by title
         return a.title.localeCompare(b.title);
+      } else if (sortBy === "custom") {
+        return (a.position ?? 0) - (b.position ?? 0);
       }
       return 0;
     });
@@ -481,8 +503,9 @@ export default function DashboardPage() {
             onChange={(e) => setSortBy(e.target.value as any)}
             className="px-4 py-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           >
-            <option value="created">Sort: Newest First</option>
+            <option value="custom">Sort: Custom</option>
             <option value="priority">Sort: By Priority</option>
+            <option value="created">Sort: Newest First</option>
             <option value="title">Sort: By Title (A-Z)</option>
           </select>
         </div>
@@ -508,7 +531,7 @@ export default function DashboardPage() {
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
+            onDragEnd={sortBy === "custom" ? handleDragEnd : undefined}
           >
             <SortableContext
               items={filteredAndSorted.map((t) => t._id)}
