@@ -42,22 +42,10 @@ const UserMenu: React.FC<UserMenuProps> = ({ darkMode, toggleDarkMode }) => {
       {open && (
         <div className="absolute right-0 mt-2 w-48 bg-gray-900 text-white shadow-lg rounded-md p-2 border border-gray-700 z-50">
           <button
-            onClick={toggleDarkMode}
-            className="w-full text-left px-3 py-2 hover:bg-gray-800 rounded transition"
-          >
-            {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
-          </button>
-          <button
             onClick={handleLogout}
             className="w-full text-left px-3 py-2 hover:bg-gray-800 rounded transition"
           >
             🚪 Logout
-          </button>
-          <button
-            onClick={() => alert("Donacija link ovde")}
-            className="w-full text-left px-3 py-2 hover:bg-gray-800 rounded transition"
-          >
-            💖 Donation
           </button>
         </div>
       )}
