@@ -1,10 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+To-Do List App
 
-## Getting Started
+A simple To-Do List web application built with Next.js and TypeScript, allowing users to add, complete, and remove tasks. This project demonstrates a modern React-based stack with optimized performance and responsive design.
 
-First, run the development server:
+Features
 
-```bash
+Add new tasks with ease
+
+Mark tasks as completed
+
+Delete tasks
+
+Responsive design for desktop and mobile
+
+Built with Next.js, TypeScript, and optimized fonts using next/font
+
+Demo
+
+Open http://localhost:3000
+ after running the project locally.
+
+Getting Started
+Prerequisites
+
+Node.js (v18+)
+
+npm / yarn / pnpm / bun
+
+Installation
+
+Clone the repository:
+
+git clone https://github.com/Micke491/To-Do-List.git
+cd To-Do-List
+
+
+Install dependencies:
+
+npm install
+# or
+yarn install
+# or
+pnpm install
+
+
+Run the development server:
+
 npm run dev
 # or
 yarn dev
@@ -12,25 +52,41 @@ yarn dev
 pnpm dev
 # or
 bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Open http://localhost:3000
+ to view the app in your browser.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Folder Structure
+/app         # Main Next.js app folder
+/components  # Reusable React components
+/public      # Static assets
+/styles      # CSS/SCSS styles
 
-## Learn More
+Custom Fonts
 
-To learn more about Next.js, take a look at the following resources:
+This project uses next/font to automatically load and optimize the Geist font from Vercel.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The easiest way to deploy is using Vercel
+.
 
-## Deploy on Vercel
+Connect your GitHub repository to Vercel.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Deploy with default Next.js settings.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Check Next.js deployment documentation
+ for more details.
+
+Learn More
+
+Next.js Documentation
+
+TypeScript with Next.js
+
+React Documentation
+
+License
+
+This project is licensed under the MIT License.
