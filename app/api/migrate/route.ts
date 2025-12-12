@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
-import Task from "@/models/Task";
+import Task from "@/models/task";
 import mongoose from "mongoose";
 
 export async function POST(req: Request) {

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
-import Task from "@/models/Task";
+import Task from "@/models/task";
 import { verifyToken } from "@/lib/auth";
 import mongoose from "mongoose";
 
