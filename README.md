@@ -1,50 +1,47 @@
-To-Do List App
+# ✅ To‑Do List App
 
-A simple To-Do List web application built with Next.js and TypeScript, allowing users to add, complete, and remove tasks. This project demonstrates a modern React-based stack with optimized performance and responsive design.
+A clean and modern **To‑Do List web application** built with **Next.js** and **TypeScript**.  
+This project demonstrates a simple yet effective task manager with a responsive UI and optimized performance.
 
-Features
+🔗 **Live Demo:** https://to-do-list-pink-eight-26.vercel.app/
 
-Add new tasks with ease
+---
 
-Mark tasks as completed
+## ✨ Features
 
-Delete tasks
+- ➕ Add new tasks easily  
+- ✅ Mark tasks as completed  
+- 🗑️ Delete tasks  
+- 📱 Fully responsive (desktop & mobile)  
+- ⚡ Built with **Next.js**, **TypeScript**, and optimized fonts using **next/font**
 
-Responsive design for desktop and mobile
+---
 
-Built with Next.js, TypeScript, and optimized fonts using next/font
+## 🚀 Getting Started
 
-Demo
+### ✅ Prerequisites
 
-Open http://localhost:3000
- after running the project locally.
+- Node.js **v18+**
+- npm / yarn / pnpm / bun
 
-Getting Started
-Prerequisites
+---
 
-Node.js (v18+)
-
-npm / yarn / pnpm / bun
-
-Installation
+## 📦 Installation
 
 Clone the repository:
 
+```bash
 git clone https://github.com/Micke491/To-Do-List.git
 cd To-Do-List
 
-
 Install dependencies:
-
 npm install
 # or
 yarn install
 # or
 pnpm install
 
-
 Run the development server:
-
 npm run dev
 # or
 yarn dev
@@ -53,40 +50,37 @@ pnpm dev
 # or
 bun dev
 
+Open your browser at:
+http://localhost:3000
 
-Open http://localhost:3000
- to view the app in your browser.
-
-Folder Structure
+📁 Folder Structure
 /app         # Main Next.js app folder
 /components  # Reusable React components
 /public      # Static assets
 /styles      # CSS/SCSS styles
 
-Custom Fonts
+🔤 Custom Fonts
+This project uses next/font to automatically load and optimize the Geist font from Vercel for improved performance and visual consistency.
 
-This project uses next/font to automatically load and optimize the Geist font from Vercel.
+☁️ Deployment
+The easiest way to deploy is via Vercel:
 
-Deployment
+Connect your GitHub repository
 
-The easiest way to deploy is using Vercel
-.
+Import the project
 
-Connect your GitHub repository to Vercel.
+Deploy with default Next.js settings
 
-Deploy with default Next.js settings.
+More details: https://nextjs.org/docs/app/building-your-application/deploying
 
-Check Next.js deployment documentation
- for more details.
-
-Learn More
-
+📚 Learn More
 Next.js Documentation
 
 TypeScript with Next.js
 
 React Documentation
 
-License
-
+📄 License
 This project is licensed under the MIT License.
+
+Made with ❤️ using Next.js & TypeScript.
