@@ -369,7 +369,7 @@ const saveOrderToDB = async (newOrder: Task[]) => {
       {/* Header */}
       <div className="flex items-center justify-between pt-4">
         <div>
-          <h1 className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-linear-to-r from-blue-400 to-purple-500">
+          <h1 className="text-4xl md:text-5xl font-extrabold leading-tight bg-clip-text text-transparent bg-linear-to-r from-blue-400 to-purple-500">
             My Tasks
           </h1>
           <p className="text-gray-400 mt-2">Organize and manage your daily tasks efficiently</p>
